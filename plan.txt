@@ -15,33 +15,56 @@ Player has a Position (1 to 1)
 Player can be in jail /* Skip turn */
 
 Property has a Rent (many to 1)
+Property has a Player (1 to 1)
+Property has a PropertyGroup (1 to 1)
 
 PropertyGroup has a Property (1 to many)
 
-Turn goes like this:
-Player chooses:
-Roll:
-    Game gives Dice to player, gets move count.
-    Game tells Board to move Player X moves (possibly telling board where player is?)
-    Board Find player's position, and advances player to new space.
-    if space has a property
-        if property is owned
-            Charge player rent
-        else
-            Offer player to buy property
-    else if (Community Chest
-             or Chance)
-        Draw Card
-    else if Go to Jail
-        Advance position to Jail (do not pass Go)
-    else if (Jail
-             or Free Parking)
-        /* maybe collect penalty money on Free Parking */
-        No-op
-    else if Go
-        Collect $200 (or maybe only if you pass go)
-    else if (Income Tax      /* Pay Penalty */
-             or Luxury Tax)
-        Pay Penalty
-Sell/Buy:
-    Player exchanges money and/or property for money and/or property.
+Game goes like this:
+Player N chooses:
+    Roll:
+        Game gives Dice to player, gets move count.
+        Game tells Board to move Player X moves (possibly telling board where player is?)
+        Board Find player's position, and advances player to new space.
+        if space has a property
+            if property is owned
+                Charge player rent
+            else
+                Offer player to buy property
+        else if (Community Chest
+                 or Chance)
+            Draw Card
+        else if Go to Jail
+            Advance position to Jail (do not pass Go)
+        else if (Jail
+                 or Free Parking)
+            /* maybe collect penalty money on Free Parking */
+            No-op
+        else if Go
+            Collect $200 (or maybe only if you pass go)
+        else if (Income Tax      /* Pay Penalty */
+                 or Luxury Tax)
+            Pay Penalty
+    Sell/Buy:
+        Player exchanges money and/or property for money and/or property.
+    Quit:
+        All property and monies go to the bank (unowned)
+    End turn:
+        N++
+
+Rent is calculated differently for nearly all properties.
+Normal Properties have:
+    a) Base rent value
+    b) Double base if both of 2 conditions are met:
+        i) All property group is owned
+        ii) Property is unupgraded (no houses purchased)
+    c) Updated each time the property is upgraded (a house/hotel is purchased)
+    d) A maximum number of 5 houses (equals a hotel)
+Utilties (Electric, water)
+    a) If 1 is owned
+        i) times 4
+    b) If both are owned
+        i) times 10
+Railroads
+    a) Base $25 rent
+    b) Doubled for each railroad owned (25 * 2^<number owned>)
