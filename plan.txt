@@ -1,0 +1,47 @@
+Game has a Board (1 to 1)
+Game has a Player (1 to many[ordered])
+Game has a Die (1 to many[2])
+Game has a Banker (1 to 1) /* Do we want this? */
+
+Board has a Position (1 to many[ordered, 40])
+
+Position has a Space (1 to 1)
+Position has a Player (1 to 1)
+
+Space has a Property (1 to 1)
+
+Player has a Property (1 to many)
+Player has a Position (1 to 1)
+Player can be in jail /* Skip turn */
+
+Property has a Rent (many to 1)
+
+PropertyGroup has a Property (1 to many)
+
+Turn goes like this:
+Player chooses:
+Roll:
+    Game gives Dice to player, gets move count.
+    Game tells Board to move Player X moves (possibly telling board where player is?)
+    Board Find player's position, and advances player to new space.
+    if space has a property
+        if property is owned
+            Charge player rent
+        else
+            Offer player to buy property
+    else if (Community Chest
+             or Chance)
+        Draw Card
+    else if Go to Jail
+        Advance position to Jail (do not pass Go)
+    else if (Jail
+             or Free Parking)
+        /* maybe collect penalty money on Free Parking */
+        No-op
+    else if Go
+        Collect $200 (or maybe only if you pass go)
+    else if (Income Tax      /* Pay Penalty */
+             or Luxury Tax)
+        Pay Penalty
+Sell/Buy:
+    Player exchanges money and/or property for money and/or property.
