@@ -1,7 +1,6 @@
 Game has a Board (1 to 1)
 Game has a Player (1 to many[ordered])
 Game has a Die (1 to many[2])
-Game has a Banker (1 to 1) /* Do we want this? */
 
 Board has a Position (1 to many[ordered, 40])
 
