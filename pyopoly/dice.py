@@ -16,7 +16,7 @@ import random
 class Dice(object):
     die1 = 0
     die2 = 0
-    snakeEyes = False
+    snake_eyes = False
     doubles = False
 
     def __init__(self):
@@ -28,13 +28,13 @@ class Dice(object):
         if self.die1 == self.die2:
             self.doubles = True
             if self.die1 == 1:
-                self.snakeEyes = True
+                self.snake_eyes = True
         return
 
     def clear(self):
         self.die1 = 0
         self.die2 = 0
-        self.snakeEyes = False
+        self.snake_eyes = False
         self.doubles = False
 
 # vim: ts=4:sw=4:expandtab
