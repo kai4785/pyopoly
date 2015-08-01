@@ -4,8 +4,9 @@ Game has a Die (1 to many[2])
 
 Board has a Position (1 to many[ordered, 40])
 
-Position has a Space (1 to 1)
-Position has a Player (1 to 1)
+Position is a tuple
+    Position has a Space (1 to 1)
+    Position has a Player (1 to 1)
 
 Space has a Property (1 to 1)
 
@@ -67,3 +68,5 @@ Utilties (Electric, water)
 Railroads
     a) Base $25 rent
     b) Doubled for each railroad owned (25 * 2^<number owned>)
+
+# vim: ts=4:sw=4:expandtab
