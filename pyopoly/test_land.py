@@ -1,4 +1,4 @@
-from property import Property,Utility,Railroad,LandGroup,LandException
+from land import Property,Utility,Railroad,LandGroup,LandException
 from dice import Dice
 
 # TODO: This should inherit from the real Player when it's done
@@ -72,7 +72,7 @@ def setup_board():
         board.electric, board.water, board.utilities = setup_utilities()
     return board
 
-def test_property():
+def test_land():
     board = setup_board()
 
     assert board.med in board.purple
@@ -109,7 +109,7 @@ def test_group_owner():
     assert not board.lightblue.all_owned(board.player(1))
     assert not board.lightblue.all_owned(board.player(2))
 
-def test_property_rent():
+def test_land_rent():
     board = setup_board()
 
     board.med.set_owner(board.player(1))
@@ -127,7 +127,7 @@ def test_property_rent():
     assert board.verm.charge_rent(board.player(1)) == 30
     assert board.verm.charge_rent(board.player(2)) == 0
 
-def test_property_houses():
+def test_land_houses():
     board = setup_board()
 
     board.med.set_owner(board.player(1))

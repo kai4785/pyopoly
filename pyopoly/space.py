@@ -12,7 +12,7 @@ Game says 'ok, space, here is everything you need to make it happen because i kn
 
 '''
 
-from polyopoly_property import Land
+from land import Land
 from game import Game
 
 class Space(object):
@@ -47,6 +47,5 @@ class GoSpace(Space):
 
 
 
-class     
 
 # vim: ts=4:sw=4:expandtab
