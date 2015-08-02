@@ -1,6 +1,9 @@
 Game has a Board (1 to 1)
 Game has a Player (1 to many[ordered])
 Game has a Die (1 to many[2])
+Game has a Banker (1 to 1)
+
+Banker has a Die (1 to many[2])
 
 Board has a Position (1 to many[ordered, 40])
 
@@ -67,3 +70,18 @@ Utilties (Electric, water)
 Railroads
     a) Base $25 rent
     b) Doubled for each railroad owned (25 * 2^<number owned>)
+
+The Banker is mean to encapsulate the transaction based actions in the game:
+The Banker begins as the owner of all property
+When a Player buys a Property
+    Money is exchanged for Property
+When a Player is charged rent
+    Money is passed from one player to another
+        In the event of utilities, rent is based on the roll of the Dice
+When a player pays a Tax
+    Money is taken from a Player
+When there are insufficient funds for a compulsory charge
+    The player must sell upgrades (houses/hotels), mortgage property, or sell property to another player in order to produce the funds.
+    If the player cannot come up with the funds required, the player forfeits the game, and all property is given back to the Banker.
+When a player pays a fee (like getting out of Jail)
+    The money is given to the bank
