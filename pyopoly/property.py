@@ -34,7 +34,6 @@ class Property(Land):
     def __init__(self, name, price, *args, **kwargs):
         super(Property, self).__init__(name, price, *args)
         self.houses = 0
-        self.house_values = []
         self.house_values = kwargs['house_values']
     def charge_rent(self, banker, player):
         if self.owner == player or self.mortgaged == True:
