@@ -34,15 +34,15 @@ class FakeDice(Dice):
 board = FakeBoard(FakeDice(), FakeBanker(), FakePlayer("1"), FakePlayer("2"))
 
 def setup_purple():
-    med = Property("Mediteranian Ave.", 60, [2, 10, 30, 90, 160, 250])
-    baltic = Property("Baltic Ave.", 60, [4, 20, 60, 180, 320, 450])
+    med = Property("Mediteranian Ave.", 60, house_values=[2, 10, 30, 90, 160, 250])
+    baltic = Property("Baltic Ave.", 60, house_values=[4, 20, 60, 180, 320, 450])
     purple = PropertyGroup("Purple", med, baltic)
     return med, baltic, purple
 
 def setup_lightblue():
-    ori = Property("Oriental Ave.", 100, [30, 90, 270, 400, 550])
-    verm = Property("Vermont Ave.", 100, [30, 90, 270, 400, 550])
-    conn = Property("Connecticut Ave.", 120, [40, 100, 300, 450, 600])
+    ori = Property("Oriental Ave.", 100, house_values=[30, 90, 270, 400, 550])
+    verm = Property("Vermont Ave.", 100, house_values=[30, 90, 270, 400, 550])
+    conn = Property("Connecticut Ave.", 120, house_values=[40, 100, 300, 450, 600])
     lightblue = PropertyGroup("Light Blue", ori, verm, conn)
     return ori, verm, conn, lightblue
 
