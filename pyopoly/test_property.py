@@ -19,7 +19,8 @@ class FakeBoard(object):
         self.players = args
 
         # Banker also needs the dice
-        banker.dice = dice
+        for player in self.players:
+            player.dice = dice
     def player(self, num):
         return self.players[num - 1]
 
@@ -117,14 +118,14 @@ def test_property_rent():
     board.verm.set_owner(board.player(2))
 
     # Player 1 owns both purple, so rent should be double
-    assert board.med.charge_rent(board.banker, board.player(1)) == 0
-    assert board.med.charge_rent(board.banker, board.player(2)) == 4
-    assert board.baltic.charge_rent(board.banker, board.player(1)) == 0
-    assert board.baltic.charge_rent(board.banker, board.player(2)) == 8
-    assert board.ori.charge_rent(board.banker, board.player(1)) == 0
-    assert board.ori.charge_rent(board.banker, board.player(2)) == 30
-    assert board.verm.charge_rent(board.banker, board.player(1)) == 30
-    assert board.verm.charge_rent(board.banker, board.player(2)) == 0
+    assert board.med.charge_rent(board.player(1)) == 0
+    assert board.med.charge_rent(board.player(2)) == 4
+    assert board.baltic.charge_rent(board.player(1)) == 0
+    assert board.baltic.charge_rent(board.player(2)) == 8
+    assert board.ori.charge_rent(board.player(1)) == 0
+    assert board.ori.charge_rent(board.player(2)) == 30
+    assert board.verm.charge_rent(board.player(1)) == 30
+    assert board.verm.charge_rent(board.player(2)) == 0
 
 def test_property_houses():
     board = setup_board()
@@ -135,10 +136,10 @@ def test_property_houses():
     board.med.buy_house(3)
     board.baltic.buy_house(4)
 
-    assert board.med.charge_rent(board.banker, board.player(1)) == 0
-    assert board.med.charge_rent(board.banker, board.player(2)) == 90
-    assert board.baltic.charge_rent(board.banker, board.player(1)) == 0
-    assert board.baltic.charge_rent(board.banker, board.player(2)) == 320
+    assert board.med.charge_rent(board.player(1)) == 0
+    assert board.med.charge_rent(board.player(2)) == 90
+    assert board.baltic.charge_rent(board.player(1)) == 0
+    assert board.baltic.charge_rent(board.player(2)) == 320
 
     try:
         board.med.buy_house(3)
@@ -159,43 +160,43 @@ def test_railroad_rent():
     #rr, pr, bo, sl
     board.rr.set_owner(board.player(1))
 
-    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.rr.charge_rent(board.banker, board.player(2)) == 25
+    assert board.rr.charge_rent(board.player(1)) == 0
+    assert board.rr.charge_rent(board.player(2)) == 25
 
     board.pr.set_owner(board.player(1))
 
-    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.rr.charge_rent(board.banker, board.player(2)) == 50
-    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.pr.charge_rent(board.banker, board.player(2)) == 50
+    assert board.rr.charge_rent(board.player(1)) == 0
+    assert board.rr.charge_rent(board.player(2)) == 50
+    assert board.pr.charge_rent(board.player(1)) == 0
+    assert board.pr.charge_rent(board.player(2)) == 50
 
     board.bo.set_owner(board.player(2))
-    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.rr.charge_rent(board.banker, board.player(2)) == 50
-    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.pr.charge_rent(board.banker, board.player(2)) == 50
-    assert board.bo.charge_rent(board.banker, board.player(1)) == 25
-    assert board.bo.charge_rent(board.banker, board.player(2)) == 0
+    assert board.rr.charge_rent(board.player(1)) == 0
+    assert board.rr.charge_rent(board.player(2)) == 50
+    assert board.pr.charge_rent(board.player(1)) == 0
+    assert board.pr.charge_rent(board.player(2)) == 50
+    assert board.bo.charge_rent(board.player(1)) == 25
+    assert board.bo.charge_rent(board.player(2)) == 0
 
     board.sl.set_owner(board.player(1))
-    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.rr.charge_rent(board.banker, board.player(2)) == 100
-    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.pr.charge_rent(board.banker, board.player(2)) == 100
-    assert board.bo.charge_rent(board.banker, board.player(1)) == 25
-    assert board.bo.charge_rent(board.banker, board.player(2)) == 0
-    assert board.sl.charge_rent(board.banker, board.player(1)) == 0
-    assert board.sl.charge_rent(board.banker, board.player(2)) == 100
+    assert board.rr.charge_rent(board.player(1)) == 0
+    assert board.rr.charge_rent(board.player(2)) == 100
+    assert board.pr.charge_rent(board.player(1)) == 0
+    assert board.pr.charge_rent(board.player(2)) == 100
+    assert board.bo.charge_rent(board.player(1)) == 25
+    assert board.bo.charge_rent(board.player(2)) == 0
+    assert board.sl.charge_rent(board.player(1)) == 0
+    assert board.sl.charge_rent(board.player(2)) == 100
 
     board.bo.set_owner(board.player(1))
-    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.rr.charge_rent(board.banker, board.player(2)) == 200
-    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
-    assert board.pr.charge_rent(board.banker, board.player(2)) == 200
-    assert board.bo.charge_rent(board.banker, board.player(1)) == 0
-    assert board.bo.charge_rent(board.banker, board.player(2)) == 200
-    assert board.sl.charge_rent(board.banker, board.player(1)) == 0
-    assert board.sl.charge_rent(board.banker, board.player(2)) == 200
+    assert board.rr.charge_rent(board.player(1)) == 0
+    assert board.rr.charge_rent(board.player(2)) == 200
+    assert board.pr.charge_rent(board.player(1)) == 0
+    assert board.pr.charge_rent(board.player(2)) == 200
+    assert board.bo.charge_rent(board.player(1)) == 0
+    assert board.bo.charge_rent(board.player(2)) == 200
+    assert board.sl.charge_rent(board.player(1)) == 0
+    assert board.sl.charge_rent(board.player(2)) == 200
 
 def test_utility_rent():
     board = setup_board()
@@ -203,20 +204,20 @@ def test_utility_rent():
     board.electric.set_owner(board.player(1))
     board.dice.die1 = 1
     board.dice.die2 = 1
-    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
+    assert (board.electric.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
     board.dice.die1 = 4
     board.dice.die2 = 3
-    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
+    assert (board.electric.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
 
     board.water.set_owner(board.player(1))
     board.dice.die1 = 1
     board.dice.die2 = 1
-    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
-    assert (board.water.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.electric.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.water.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
     board.dice.die1 = 4
     board.dice.die2 = 3
-    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
-    assert (board.water.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.electric.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.water.charge_rent(board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
 
 def test_owner_type():
     assert type(board.player(1)) != str

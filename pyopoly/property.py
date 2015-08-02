@@ -35,7 +35,7 @@ class Property(Land):
         super(Property, self).__init__(name, price, *args)
         self.houses = 0
         self.house_values = kwargs['house_values']
-    def charge_rent(self, banker, player):
+    def charge_rent(self, player):
         if self.owner == player or self.mortgaged == True:
             rent = 0
         elif self.houses == 0 and self.pgroup.all_owned(self.owner):
@@ -59,7 +59,7 @@ class Property(Land):
 class Utility(Land):
     def __init__(self, name, price, *args):
         super(Utility, self).__init__(name, price, *args)
-    def charge_rent(self, banker, player):
+    def charge_rent(self, player):
         rent = 0
         prop_owned = 0
         prop_owned = self.pgroup.player_owned(self.owner)
@@ -67,17 +67,17 @@ class Utility(Land):
             rent = 0
         else:
             # TODO: the die should be provided some other way
-            banker.dice.roll()
+            self.owner.dice.roll()
             if prop_owned == 1:
-                rent = (banker.dice.die1 + banker.dice.die2) * 4 # 4 * Dice
+                rent = (self.owner.dice.die1 + self.owner.dice.die2) * 4 # 4 * Dice
             if prop_owned == 2:
-                rent = (banker.dice.die1 + banker.dice.die2) * 10 # 10 * Dice
+                rent = (self.owner.dice.die1 + self.owner.dice.die2) * 10 # 10 * Dice
         return rent
 
 class Railroad(Land):
     def __init__(self, name, price, *args):
         super(Railroad, self).__init__(name, price, *args)
-    def charge_rent(self, banker, player):
+    def charge_rent(self, player):
         rent = 0
         prop_owned = self.pgroup.player_owned(self.owner)
         if self.owner == player or self.mortgaged == True:
