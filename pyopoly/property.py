@@ -13,7 +13,7 @@ class Land(object):
     def __init__(self, name, price, *args):
         self.owner = None
         self.mortgaged = False
-        self.pgroup = None
+        self.landgroup = None
         self.name = name
         self.price = price
     def is_owned():
@@ -38,7 +38,7 @@ class Property(Land):
     def charge_rent(self, player):
         if self.owner == player or self.mortgaged == True:
             rent = 0
-        elif self.houses == 0 and self.pgroup.all_owned(self.owner):
+        elif self.houses == 0 and self.landgroup.all_owned(self.owner):
             rent = self.house_values[0] * 2
         else:
             rent = self.house_values[self.houses]
@@ -62,7 +62,7 @@ class Utility(Land):
     def charge_rent(self, player):
         rent = 0
         prop_owned = 0
-        prop_owned = self.pgroup.player_owned(self.owner)
+        prop_owned = self.landgroup.player_owned(self.owner)
         if self.owner == player or self.mortgaged == True:
             rent = 0
         else:
@@ -79,27 +79,31 @@ class Railroad(Land):
         super(Railroad, self).__init__(name, price, *args)
     def charge_rent(self, player):
         rent = 0
-        prop_owned = self.pgroup.player_owned(self.owner)
+        prop_owned = self.landgroup.player_owned(self.owner)
         if self.owner == player or self.mortgaged == True:
             rent = 0
         else:
             rent = 25 * ( 2**(prop_owned - 1) )
         return rent
 
-class PropertyGroup(object):
+class LandGroup(object):
     def __init__(self, name, *args):
         self.name = ""
-        self.properties = []
+        self.lands = []
         for arg in args:
-            arg.pgroup = self
-            self.properties.append(arg)
+            arg.landgroup = self
+            self.lands.append(arg)
         self.name = name
     def player_owned(self, player):
-        return len([p for p in self.properties if p.owner == player])
+        return len([p for p in self.lands if p.owner == player])
     def all_owned(self, player):
-        return self.player_owned(player) == len(self.properties)
+        return self.player_owned(player) == len(self.lands)
     def __str__(self):
-        return "%s (%s)" % (self.name, self.properties)
+        return "%s (%s)" % (self.name, self.lands)
     def __repr__(self):
         return str(self)
+    def __iter__(self):
+        return iter(self.lands)
+    def __len__(self):
+        return len(self.lands)
 # vim: ts=4:sw=4:expandtab

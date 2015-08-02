@@ -1,4 +1,4 @@
-from property import Property,Utility,Railroad,PropertyGroup,LandException
+from property import Property,Utility,Railroad,LandGroup,LandException
 from dice import Dice
 
 # TODO: This should inherit from the real Player when it's done
@@ -37,14 +37,14 @@ board = FakeBoard(FakeDice(), FakeBanker(), FakePlayer("1"), FakePlayer("2"))
 def setup_purple():
     med = Property("Mediteranian Ave.", 60, house_values=[2, 10, 30, 90, 160, 250])
     baltic = Property("Baltic Ave.", 60, house_values=[4, 20, 60, 180, 320, 450])
-    purple = PropertyGroup("Purple", med, baltic)
+    purple = LandGroup("Purple", med, baltic)
     return med, baltic, purple
 
 def setup_lightblue():
     ori = Property("Oriental Ave.", 100, house_values=[30, 90, 270, 400, 550])
     verm = Property("Vermont Ave.", 100, house_values=[30, 90, 270, 400, 550])
     conn = Property("Connecticut Ave.", 120, house_values=[40, 100, 300, 450, 600])
-    lightblue = PropertyGroup("Light Blue", ori, verm, conn)
+    lightblue = LandGroup("Light Blue", ori, verm, conn)
     return ori, verm, conn, lightblue
 
 def setup_railroad():
@@ -52,14 +52,14 @@ def setup_railroad():
     pr = Railroad("Pennsylvania Railroad", 20)
     bo = Railroad("B. & O. Railroad", 20)
     sl = Railroad("Short Line Railroad", 20)
-    railroads = PropertyGroup("Railroads", rr, pr, bo, sl)
+    railroads = LandGroup("Railroads", rr, pr, bo, sl)
 
     return rr, pr, bo, sl, railroads
 
 def setup_utilities():
     electric = Utility("Electric Company", 30)
     water = Utility("Water Works", 30)
-    utilities = PropertyGroup("Utilities", electric, water)
+    utilities = LandGroup("Utilities", electric, water)
 
     return electric, water, utilities
 
@@ -75,25 +75,25 @@ def setup_board():
 def test_property():
     board = setup_board()
 
-    assert board.med in board.purple.properties
-    assert board.baltic in board.purple.properties
-    assert len(board.purple.properties) == 2
+    assert board.med in board.purple
+    assert board.baltic in board.purple
+    assert len(board.purple) == 2
 
 def test_railroads():
     board = setup_board()
 
-    assert board.rr in board.railroads.properties
-    assert board.pr in board.railroads.properties
-    assert board.bo in board.railroads.properties
-    assert board.sl in board.railroads.properties
-    assert len(board.railroads.properties) == 4
+    assert board.rr in board.railroads
+    assert board.pr in board.railroads
+    assert board.bo in board.railroads
+    assert board.sl in board.railroads
+    assert len(board.railroads) == 4
 
 def test_utilities():
     board = setup_board()
 
-    assert board.water in board.utilities.properties
-    assert board.electric in board.utilities.properties
-    assert len(board.utilities.properties) == 2
+    assert board.water in board.utilities
+    assert board.electric in board.utilities
+    assert len(board.utilities) == 2
 
 def test_group_owner():
     board = setup_board()
