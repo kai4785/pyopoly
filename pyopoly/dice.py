@@ -14,12 +14,11 @@ returns:
 import random
 
 class Dice(object):
-    die1 = 0
-    die2 = 0
-    snake_eyes = False
-    doubles = False
-
     def __init__(self):
+        self.die1 = 0
+        self.die2 = 0
+        self.snake_eyes = False
+        self.doubles = False
         pass
 
     def roll(self):

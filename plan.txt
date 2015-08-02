@@ -1,12 +1,17 @@
 Game has a Board (1 to 1)
 Game has a Player (1 to many[ordered])
 Game has a Die (1 to many[2])
+Game has a Banker (1 to 1)
+
+Banker has a Die (1 to many[2])
 
 Board has a Position (1 to many[ordered, 40])
 
 Position is a tuple
     Position has a Space (1 to 1)
     Position has a Player (1 to 1)
+
+Space has a Property (1 to 1)
 
 Player has a Property (1 to many)
 Player has a Position (1 to 1)
@@ -66,18 +71,3 @@ Utilties (Electric, water)
 Railroads
     a) Base $25 rent
     b) Doubled for each railroad owned (25 * 2^<number owned>)
-
-Spaces
-    Identify 0 .. N players on it
-    Has an action depending on what it contains
-        Property: charge Player rent, Player could build house/hotel, mortgage, etc...
-        Go: collect $200 after Player passes
-        Go to Jail: send Player to jail
-        Jail: no-op
-        Free Parking: Player collects money
-        Chance: Player draws a Chance card
-        Community Chest: Player draws a Community Chest card
-        Luxury tax: Player pays $75.00
-        Income tax: Player pays 10% or $200
-
-# vim: ts=4:sw=4:expandtab
