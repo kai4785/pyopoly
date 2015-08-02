@@ -1,1 +1,1 @@
-__all__ = ['dice.py', 'propery.py']
+__all__ = ['dice.py', 'property.py']
