@@ -1,14 +1,37 @@
 from property import Property,Utility,Railroad,PropertyGroup,LandException
+from dice import Dice
 
-# TODO: These should be player classes
-player1 = "1"
-player2 = "2"
+# TODO: This should inherit from the real Player when it's done
+class FakePlayer(object):
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return str(self)
 
-class Board(object):
-    def __init__(self):
+# TODO: This should inherit from the real Board when it's done
+class FakeBoard(object):
+    def __init__(self, dice, banker, *args):
         self.init = False
+        self.dice = dice
+        self.banker = banker
+        self.players = args
 
-board = Board()
+        # Banker also needs the dice
+        banker.dice = dice
+    def player(self, num):
+        return self.players[num - 1]
+
+# TODO: This should inherit from the real Banker when it's done
+class FakeBanker(object):
+    pass
+
+class FakeDice(Dice):
+    def roll(self):
+        pass
+
+board = FakeBoard(FakeDice(), FakeBanker(), FakePlayer("1"), FakePlayer("2"))
 
 def setup_purple():
     med = Property("Mediteranian Ave.", 60, [2, 10, 30, 90, 160, 250])
@@ -74,48 +97,48 @@ def test_utilities():
 def test_group_owner():
     board = setup_board()
 
-    board.med.set_owner(player1)
-    board.baltic.set_owner(player1)
-    board.ori.set_owner(player1)
-    board.verm.set_owner(player2)
+    board.med.set_owner(board.player(1))
+    board.baltic.set_owner(board.player(1))
+    board.ori.set_owner(board.player(1))
+    board.verm.set_owner(board.player(2))
 
-    assert board.purple.all_owned(player1)
-    assert not board.purple.all_owned(player2)
+    assert board.purple.all_owned(board.player(1))
+    assert not board.purple.all_owned(board.player(2))
 
-    assert not board.lightblue.all_owned(player1)
-    assert not board.lightblue.all_owned(player2)
+    assert not board.lightblue.all_owned(board.player(1))
+    assert not board.lightblue.all_owned(board.player(2))
 
 def test_property_rent():
     board = setup_board()
 
-    board.med.set_owner(player1)
-    board.baltic.set_owner(player1)
-    board.ori.set_owner(player1)
-    board.verm.set_owner(player2)
+    board.med.set_owner(board.player(1))
+    board.baltic.set_owner(board.player(1))
+    board.ori.set_owner(board.player(1))
+    board.verm.set_owner(board.player(2))
 
     # Player 1 owns both purple, so rent should be double
-    assert board.med.charge_rent(player1) == 0
-    assert board.med.charge_rent(player2) == 4
-    assert board.baltic.charge_rent(player1) == 0
-    assert board.baltic.charge_rent(player2) == 8
-    assert board.ori.charge_rent(player1) == 0
-    assert board.ori.charge_rent(player2) == 30
-    assert board.verm.charge_rent(player1) == 30
-    assert board.verm.charge_rent(player2) == 0
+    assert board.med.charge_rent(board.banker, board.player(1)) == 0
+    assert board.med.charge_rent(board.banker, board.player(2)) == 4
+    assert board.baltic.charge_rent(board.banker, board.player(1)) == 0
+    assert board.baltic.charge_rent(board.banker, board.player(2)) == 8
+    assert board.ori.charge_rent(board.banker, board.player(1)) == 0
+    assert board.ori.charge_rent(board.banker, board.player(2)) == 30
+    assert board.verm.charge_rent(board.banker, board.player(1)) == 30
+    assert board.verm.charge_rent(board.banker, board.player(2)) == 0
 
 def test_property_houses():
     board = setup_board()
 
-    board.med.set_owner(player1)
-    board.baltic.set_owner(player1)
+    board.med.set_owner(board.player(1))
+    board.baltic.set_owner(board.player(1))
 
     board.med.buy_house(3)
     board.baltic.buy_house(4)
 
-    assert board.med.charge_rent(player1) == 0
-    assert board.med.charge_rent(player2) == 90
-    assert board.baltic.charge_rent(player1) == 0
-    assert board.baltic.charge_rent(player2) == 320
+    assert board.med.charge_rent(board.banker, board.player(1)) == 0
+    assert board.med.charge_rent(board.banker, board.player(2)) == 90
+    assert board.baltic.charge_rent(board.banker, board.player(1)) == 0
+    assert board.baltic.charge_rent(board.banker, board.player(2)) == 320
 
     try:
         board.med.buy_house(3)
@@ -134,51 +157,69 @@ def test_railroad_rent():
     board = setup_board()
 
     #rr, pr, bo, sl
-    board.rr.set_owner(player1)
+    board.rr.set_owner(board.player(1))
 
-    assert board.rr.charge_rent(player1) == 0
-    assert board.rr.charge_rent(player2) == 25
+    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.rr.charge_rent(board.banker, board.player(2)) == 25
 
-    board.pr.set_owner(player1)
+    board.pr.set_owner(board.player(1))
 
-    assert board.rr.charge_rent(player1) == 0
-    assert board.rr.charge_rent(player2) == 50
-    assert board.pr.charge_rent(player1) == 0
-    assert board.pr.charge_rent(player2) == 50
+    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.rr.charge_rent(board.banker, board.player(2)) == 50
+    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.pr.charge_rent(board.banker, board.player(2)) == 50
 
-    board.bo.set_owner(player2)
-    assert board.rr.charge_rent(player1) == 0
-    assert board.rr.charge_rent(player2) == 50
-    assert board.pr.charge_rent(player1) == 0
-    assert board.pr.charge_rent(player2) == 50
-    assert board.bo.charge_rent(player1) == 25
-    assert board.bo.charge_rent(player2) == 0
+    board.bo.set_owner(board.player(2))
+    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.rr.charge_rent(board.banker, board.player(2)) == 50
+    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.pr.charge_rent(board.banker, board.player(2)) == 50
+    assert board.bo.charge_rent(board.banker, board.player(1)) == 25
+    assert board.bo.charge_rent(board.banker, board.player(2)) == 0
 
-    board.sl.set_owner(player1)
-    assert board.rr.charge_rent(player1) == 0
-    assert board.rr.charge_rent(player2) == 100
-    assert board.pr.charge_rent(player1) == 0
-    assert board.pr.charge_rent(player2) == 100
-    assert board.bo.charge_rent(player1) == 25
-    assert board.bo.charge_rent(player2) == 0
-    assert board.sl.charge_rent(player1) == 0
-    assert board.sl.charge_rent(player2) == 100
+    board.sl.set_owner(board.player(1))
+    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.rr.charge_rent(board.banker, board.player(2)) == 100
+    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.pr.charge_rent(board.banker, board.player(2)) == 100
+    assert board.bo.charge_rent(board.banker, board.player(1)) == 25
+    assert board.bo.charge_rent(board.banker, board.player(2)) == 0
+    assert board.sl.charge_rent(board.banker, board.player(1)) == 0
+    assert board.sl.charge_rent(board.banker, board.player(2)) == 100
 
-    board.bo.set_owner(player1)
-    assert board.rr.charge_rent(player1) == 0
-    assert board.rr.charge_rent(player2) == 200
-    assert board.pr.charge_rent(player1) == 0
-    assert board.pr.charge_rent(player2) == 200
-    assert board.bo.charge_rent(player1) == 0
-    assert board.bo.charge_rent(player2) == 200
-    assert board.sl.charge_rent(player1) == 0
-    assert board.sl.charge_rent(player2) == 200
+    board.bo.set_owner(board.player(1))
+    assert board.rr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.rr.charge_rent(board.banker, board.player(2)) == 200
+    assert board.pr.charge_rent(board.banker, board.player(1)) == 0
+    assert board.pr.charge_rent(board.banker, board.player(2)) == 200
+    assert board.bo.charge_rent(board.banker, board.player(1)) == 0
+    assert board.bo.charge_rent(board.banker, board.player(2)) == 200
+    assert board.sl.charge_rent(board.banker, board.player(1)) == 0
+    assert board.sl.charge_rent(board.banker, board.player(2)) == 200
 
 def test_utility_rent():
-    raise BaseException("Implement me!")
+    board = setup_board()
+
+    board.electric.set_owner(board.player(1))
+    board.dice.die1 = 1
+    board.dice.die2 = 1
+    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
+    board.dice.die1 = 4
+    board.dice.die2 = 3
+    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 4)
+
+    board.water.set_owner(board.player(1))
+    board.dice.die1 = 1
+    board.dice.die2 = 1
+    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.water.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    board.dice.die1 = 4
+    board.dice.die2 = 3
+    assert (board.electric.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
+    assert (board.water.charge_rent(board.banker, board.player(2)) == (board.dice.die1 + board.dice.die2) * 10)
 
 def test_owner_type():
-    assert type(player1) != str
+    assert type(board.player(1)) != str
 
 
 # vim: ts=4:sw=4:expandtab
